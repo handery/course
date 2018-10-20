@@ -1,6 +1,5 @@
-#include "pch.h"
 #include<iostream>
-#include<algorithm>
+#include<time.h>
 #include<map>
 #include<string>
 #include<stack>
@@ -17,11 +16,11 @@ struct Node {
 	int cost;
 	int pos;
 	int step;
-	Node(string s,string f,int ss) { 
+	Node(string s, string f, int ss) {
 		status = s;
 		father = f;
 		step = ss;
-		cost = count(); 
+		cost = count();
 		pos = status.find('0');
 	}
 	int count() {
@@ -82,20 +81,20 @@ void greedy_search(string initial) {
 		return;
 	}
 	priority_queue<Node> q;
-	q.push(Node(initial,"end",0));
+	q.push(Node(initial, "end", 0));
 	while (!q.empty()) {
 		Node node = q.top();
 		q.pop();
 		nmap[node.status] = 1;
 		path.push(node);
-		if(node.check()){
+		if (node.check()) {
 			return;
 		}
 		for (auto index : gmove[node.pos]) {
 			if (index != -1) {
 				string son = swap(node.status, node.pos, index);
 				if (nmap[son] == 1) continue;
-				Node son1(son,node.status,node.step+1);
+				Node son1(son, node.status, node.step + 1);
 				q.push(son1);
 				nmap[son] = 1;
 			}
@@ -111,7 +110,7 @@ void getp(stack<Node>& path) {
 			t.push(path.top());
 		path.pop();
 	}
-	ofstream outfile("out.txt");
+	ofstream outfile("out_greedy.txt");
 	while (!t.empty()) {
 		outfile << t.top().status << endl;
 		t.pop();
@@ -120,7 +119,19 @@ void getp(stack<Node>& path) {
 }
 
 int main() {
-	string first = "562870134";
-	greedy_search(first);
-	getp(path);
+	string first = "503624871";
+	clock_t startTime, endTime;
+	int loop_time = 5;
+	double total_time = 0;
+	while (loop_time--) {
+		nmap.clear();
+		startTime = clock();
+		greedy_search(first);
+		getp(path);
+		endTime = clock();
+		total_time += (double)(endTime - startTime) / CLOCKS_PER_SEC;
+
+	}
+	ofstream outfile("out_greedy.txt", ios::app);
+	outfile << "Average_time: " << total_time / 5 << "s" << endl;
 }
