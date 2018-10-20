@@ -4,6 +4,7 @@
 #include<stack>
 #include<queue>
 #include<fstream>
+#include<time.h>
 using namespace std;
 
 const string dest = "123456780";
@@ -42,7 +43,7 @@ struct Node {
 	int count() {
 		int sum = 0;
 		for (int i = 0; i < status.size(); i++) {
-			sum += manhatan[i][status[i]-'0'];
+			sum += manhatan[i][status[i] - '0'];
 		}
 		return sum + step;
 	}
@@ -121,7 +122,7 @@ void getp(stack<Node>& path) {
 			t.push(path.top());
 		path.pop();
 	}
-	ofstream outfile("out.txt");
+	ofstream outfile("out_astar2.txt");
 	while (!t.empty()) {
 		outfile << t.top().status << endl;
 		t.pop();
@@ -130,7 +131,19 @@ void getp(stack<Node>& path) {
 }
 
 int main() {
-	string first = "623015478";
-	Astar(first);
-	getp(path);
+	string first = "503624871";
+	clock_t startTime, endTime;
+	int loop_time = 5;
+	double total_time = 0;
+	while (loop_time--) {
+		nmap.clear();
+		startTime = clock();
+		Astar(first);
+		getp(path);
+		endTime = clock();
+		total_time += (double)(endTime - startTime) / CLOCKS_PER_SEC;
+
+	}
+	ofstream outfile("out_astar2.txt", ios::app);
+	outfile << "Average_time: " << total_time / 5 << "s" << endl;
 }
