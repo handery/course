@@ -1,4 +1,5 @@
 #include<iostream>
+#include<time.h>
 #include<map>
 #include<string>
 #include<stack>
@@ -23,12 +24,12 @@ struct Node {
 		pos = status.find('0');
 	}
 	int count() {
-		int sum = 0;
+		int sum = step;
 		for (int i = 0; i < status.size(); i++) {
 			if (status[i] != dest[i])
 				sum++;
-		}
-		return sum+step;
+		}		
+		return sum;
 	}
 	bool check() {
 		return status == dest;
@@ -109,7 +110,7 @@ void getp(stack<Node>& path) {
 			t.push(path.top());
 		path.pop();
 	}
-	ofstream outfile("out.txt");
+	ofstream outfile("out_astar1.txt");
 	while (!t.empty()) {
 		outfile << t.top().status << endl;
 		t.pop();
@@ -119,6 +120,18 @@ void getp(stack<Node>& path) {
 
 int main() {
 	string first = "562870134";
-	Astar(first);
-	getp(path);
+	clock_t startTime, endTime;
+	int loop_time = 5;
+	double total_time = 0;
+	while (loop_time--) {
+		nmap.clear();
+		startTime = clock();
+		Astar(first);
+		getp(path);
+		endTime = clock();
+		total_time += (double)(endTime - startTime) / CLOCKS_PER_SEC;
+
+	}
+	ofstream outfile("out_astar1.txt", ios::app);
+	outfile << "Average_time: " << total_time / 5 << "s" << endl;
 }
